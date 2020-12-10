@@ -97,3 +97,16 @@ FROM
         JOIN
     dept_emp ON employees.emp_no = dept_emp.emp_no
 GROUP BY dept_emp.dept_no
+
+-- 5. Найти количество сотрудников в отделах и посмотреть, сколько всего денег получает отдел.
+SELECT 
+    COUNT(employees.emp_no),
+    dept_emp.dept_no,
+    SUM(salaries.salary) total_salary
+FROM
+    employees
+        JOIN
+    dept_emp ON employees.emp_no = dept_emp.emp_no
+        JOIN
+    salaries ON salaries.emp_no = employees.emp_no
+GROUP BY dept_emp.dept_no
