@@ -71,3 +71,20 @@ FROM
         JOIN
     employees ON salaries.emp_no = employees.emp_no
 GROUP BY employees.emp_no
+
+-- 3. Удалить одного сотрудника, у которого максимальная зарплата.
+DELETE FROM salaries 
+WHERE
+    (emp_no , salary) IN (SELECT 
+        *
+    FROM
+        (SELECT 
+            emp_no, salary
+        FROM
+            salaries
+        
+        WHERE
+            salary IN (SELECT 
+                MAX(salary)
+            FROM
+                salaries)) AS s)
