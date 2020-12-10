@@ -88,3 +88,12 @@ WHERE
                 MAX(salary)
             FROM
                 salaries)) AS s)
+
+-- 4. Посчитать количество сотрудников во всех отделах.
+SELECT 
+    COUNT(employees.emp_no), dept_emp.dept_no
+FROM
+    employees
+        JOIN
+    dept_emp ON employees.emp_no = dept_emp.emp_no
+GROUP BY dept_emp.dept_no
