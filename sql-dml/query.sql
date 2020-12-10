@@ -51,3 +51,23 @@ FROM
         JOIN
     departments ON departments.dept_no = dept_manager.dept_no
 GROUP BY dept_manager.dept_no
+
+-- 2. Выбрать максимальную зарплату у сотрудника.
+-- Если выбрать одного сотрудника с максимальной зарплатой из всех сотрудников
+SELECT 
+    emp_no, salary max_salary
+FROM
+    salaries
+WHERE
+    salary IN (SELECT 
+            MAX(salary)
+        FROM
+            salaries)
+-- Если выбрать максимальную зарплату у каждого сотрудника
+SELECT 
+    MAX(salary) max_salary, employees.*
+FROM
+    salaries
+        JOIN
+    employees ON salaries.emp_no = employees.emp_no
+GROUP BY employees.emp_no
