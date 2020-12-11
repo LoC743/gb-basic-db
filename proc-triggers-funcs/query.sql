@@ -24,3 +24,22 @@ BEGIN
     FROM employees
     WHERE first_name = f_name AND last_name = l_name;
 END
+
+-- CALL search_manager(@result, "Amstein", "Ghemri");
+-- SELECT @result;
+
+CREATE FUNCTION `get_manager` (f_name VARCHAR(14), l_name VARCHAR(16))
+RETURNS INTEGER DETERMINISTIC
+BEGIN
+	DECLARE result_id INT;
+	SELECT emp_no INTO result_id
+    FROM employees
+	WHERE first_name = f_name AND last_name = l_name;
+RETURN result_id;
+END
+
+-- SELECT GET_MANAGER('Amstein', 'Ghemri')
+
+-- 3. Создать триггер, который при добавлении нового сотрудника будет выплачивать
+--  ему вступительный бонус, занося запись об этом в таблицу salary.
+
