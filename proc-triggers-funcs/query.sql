@@ -42,4 +42,9 @@ END
 
 -- 3. Создать триггер, который при добавлении нового сотрудника будет выплачивать
 --  ему вступительный бонус, занося запись об этом в таблицу salary.
-
+CREATE DEFINER=`root`@`localhost` TRIGGER `employees_AFTER_INSERT` AFTER INSERT ON `employees`
+FOR EACH ROW
+BEGIN
+	INSERT INTO salaries (emp_no, salary, from_date, to_date)
+    VALUES (NEW.emp_no, 1, NEW.hire_date, (SELECT DATE_ADD(NOW(), INTERVAL 30 DAY)));
+END
