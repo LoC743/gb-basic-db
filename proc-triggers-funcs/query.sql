@@ -12,3 +12,15 @@ CREATE VIEW `cities_in_moscow_region` AS
             JOIN
         _regions ON _cities.region_id = _regions.id
     HAVING _regions.title = 'Московская область'
+
+-- 2. Создать функцию, которая найдет менеджера по имени и фамилии.
+CREATE PROCEDURE `search_manager` 
+(
+	OUT id INT,
+    IN f_name VARCHAR(14), l_name VARCHAR(16)
+)
+BEGIN
+	SELECT emp_no INTO id
+    FROM employees
+    WHERE first_name = f_name AND last_name = l_name;
+END
