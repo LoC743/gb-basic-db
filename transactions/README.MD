@@ -37,3 +37,20 @@
 -   Покупка `_` (вещей, подписки и тд) в магазине(интернет магазине). Если обе стороны готовы обменяться, то транзакция совершается. Если товара в наличии нет, или у покупателя не хватает денег на совершение покупки, то тразакция откатывается.
 
 ## 3. Проанализировать несколько запросов с помощью EXPLAIN.
+
+Запрос:
+
+```
+SELECT
+    _cities.id,
+    _cities.country_id,
+    _cities.important,
+    _cities.region_id,
+    _regions.title region_title,
+    _cities.title city_title
+FROM
+    _cities
+        JOIN
+    _regions ON _cities.region_id = _regions.id
+WHERE _regions.title = 'Московская область';
+```
