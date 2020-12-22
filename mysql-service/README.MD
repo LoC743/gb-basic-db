@@ -19,3 +19,46 @@ FLUSH PRIVILEGES;
 ![](https://github.com/LoC743/gb-basic-db/blob/mysql-service/mysql-service/images/1.png)
 
 ## 2. Сделать резервную копию базы, удалить базу и пересоздать из бекапа.
+
+Была создана тестовая БД
+
+Которая содержит в себе таблицу `new_table`:
+
+| Поле | Тип         |
+| ---- | ----------- |
+| id   | INT         |
+| test | VARCHAR(45) |
+
+И добавлены следующие строки:
+
+```sql
+INSERT INTO new_table VALUES (1, "Test");
+INSERT INTO new_table VALUES (2, "foo");
+INSERT INTO new_table VALUES (3, "bar");
+```
+
+Для создание резервной копии БД можно использовать `mysqldump`
+
+![](https://github.com/LoC743/gb-basic-db/blob/mysql-service/mysql-service/images/2.png)
+
+Теперь можно удалить БД
+
+```sql
+DROP DATABASE test;
+```
+
+![](https://github.com/LoC743/gb-basic-db/blob/mysql-service/mysql-service/images/3.png)
+
+Для восстановления БД из dump-а потребуется снова создать БД:
+
+```sql
+CREATE DATABASE test;
+```
+
+И выполнить загрузку dump-а в созданную БД
+
+```
+/usr/local/mysql/bin/mysql -u root -p test < test-dump.sql
+```
+
+![](https://github.com/LoC743/gb-basic-db/blob/mysql-service/mysql-service/images/4.png)
