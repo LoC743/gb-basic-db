@@ -49,13 +49,13 @@ DROP DATABASE test;
 
 ![](https://github.com/LoC743/gb-basic-db/blob/mysql-service/mysql-service/images/3.png)
 
-Для восстановления БД из dump-а потребуется снова создать БД:
+Для восстановления БД из [dump-а](https://github.com/LoC743/gb-basic-db/blob/mysql-service/mysql-service/test-dump.sql) потребуется снова создать БД:
 
 ```sql
 CREATE DATABASE test;
 ```
 
-И выполнить загрузку dump-а в созданную БД
+И выполнить загрузку [dump-а](https://github.com/LoC743/gb-basic-db/blob/mysql-service/mysql-service/test-dump.sql) в созданную БД
 
 ```
 /usr/local/mysql/bin/mysql -u root -p test < test-dump.sql
