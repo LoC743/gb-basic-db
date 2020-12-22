@@ -1,5 +1,7 @@
 # Задачи к собеседованию
 
+## [Практическое задание](https://github.com/LoC743/gb-basic-db/blob/mysql-service/mysql-service/README.MD)
+
 ## Задача 1.
 
 &nbsp;&nbsp;&nbsp;&nbsp;У вас есть социальная сеть, где пользователи (id, имя) могут ставить друг другу лайки. Создайте необходимые таблицы для хранения данной информации. Создайте запрос, который выведет информацию:
@@ -45,6 +47,48 @@
 | second_user_id | INT        | Foreign Key (User), Not Null | Идентификатор второго пользователя |
 
 Если пользователи лайкнули друг друга. то создается запись в таблице Match. Если один из пользователей захочет убрать лайк, то запись из таблицы Matches удаляется.
+
+Запрос который выводит
+
+-   id пользователя;
+-   имя;
+-   лайков получено;
+-   лайков поставлено;
+-   взаимные лайки.
+
+```sql
+SELECT
+    _user.id user_id,
+    first_name,
+    last_name,
+    u_likes.user_likes,
+    u_liked.user_liked,
+    u_matches.matches_count
+FROM
+    _user
+        LEFT JOIN
+    (SELECT
+        _user.id AS id, COUNT(*) AS user_likes
+    FROM
+        _user
+    JOIN likes ON _user.id = likes.user_id
+    GROUP BY _user.id) AS u_likes ON _user.id = u_likes.id
+        LEFT JOIN
+    (SELECT
+        _user.id AS id, COUNT(*) AS user_liked
+    FROM
+        _user
+    JOIN likes ON _user.id = likes.target_id
+    GROUP BY _user.id) AS u_liked ON _user.id = u_liked.id
+        LEFT JOIN
+    (SELECT
+        _user.id AS id, COUNT(*) AS matches_count
+    FROM
+        _user
+    JOIN matches ON _user.id = matches.first_user_id
+        OR _user.id = matches.second_user_id
+    GROUP BY _user.id) AS u_matches ON _user.id = u_matches.id
+```
 
 ## Задача 2
 
