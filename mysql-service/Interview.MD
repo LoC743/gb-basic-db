@@ -142,3 +142,86 @@ FROM
 | id       | INT          | Primary Key, Auto Increment  | Идентификатор изображения               |
 | owner_id | INT          | Foreign Key (User), Not Null | Идентификатор владельца из таблицы User |
 | url      | VARCHAR(255) | Not Null                     | URL изображения                         |
+
+#### Таблица Comments
+
+| Поле      | Тип данных | Дополнительные флаги          | Описание                                   |
+| --------- | ---------- | ----------------------------- | ------------------------------------------ |
+| id        | INT        | Primary Key, Auto Increment   | Идентификатор изображения                  |
+| target_id | INT        | Foreign Key (User), Not Null  | Идентификатор изображения из таблицы Photo |
+| user_id   | INT        | Foreign Key (Photo), Not Null | Идентификатор пользователя из таблицы User |
+| text      | TEXT       | Not Null                      | Текст комментарий                          |
+
+#### Обновленная таблица Likes
+
+| Поле              | Тип данных  | Дополнительные флаги         | Описание                                            |
+| ----------------- | ----------- | ---------------------------- | --------------------------------------------------- |
+| id                | INT         | Primary Key, Auto Increment  | Идентификатор лайка                                 |
+| user_id           | INT         | Foreign Key (User), Not Null | Идентификатор пользователя, который поставил лайк   |
+| target_id         | INT         | Foreign Key (User)           | Идентификатор пользователя, которому поставили лайк |
+| photo_target_id   | INT         | Foreign Key (Photo)          | Идентификатор изображения, которому поставили лайк  |
+| comment_target_id | INT         | Foreign Key (Comments)       | Идентификатор комментария, которому поставили лайк  |
+| type              | VARCHAR(20) | Not Null                     | Отображает тип записи, которой был поставлен лайк   |
+
+#### Возможные значения для Likes.type
+
+| Тип     | Описание                            |
+| ------- | ----------------------------------- |
+| user    | Запись относится к таблице User     |
+| photo   | Запись относится к таблице Photo    |
+| comment | Запись относится к таблице Comments |
+
+#### Пользователь не может дважды лайкнуть одну и ту же сущность
+
+Для решения этой проблемы можно добавить следующий триггер:
+
+```sql
+DROP TRIGGER IF EXISTS `interview`.`likes_BEFORE_INSERT`;
+
+DELIMITER $$
+USE `interview`$$
+CREATE DEFINER=`root`@`localhost` TRIGGER `likes_BEFORE_INSERT` BEFORE INSERT ON `likes` FOR EACH ROW BEGIN
+IF EXISTS (
+    SELECT 1 FROM interview.likes
+    where (type = "photo" and target_id = NEW.photo_target_id and user_id = NEW.user_id)
+    OR (type = "comment" and target_id = NEW.comment_target_id and user_id = NEW.user_id)
+    OR (type = "user" and target_id = NEW.target_id and user_id = NEW.user_id)
+    ) THEN
+	SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Error: You can't like this item twice.";
+end if;
+END$$
+DELIMITER ;
+```
+
+#### Пользователь имеет право отозвать лайк
+
+Для этого достаточно в обычный DELETE запрос подставить идентификатор пользователя и идентификатор сущности, лайк с которой требуется удалить. Также можно указать ее тип.
+
+```sql
+DELETE FROM likes WHERE user_id = 4 AND target_id = 5 AND type = "user";
+```
+
+#### Необходимо иметь возможность считать число полученных сущностью лайков и выводить список пользователей, поставивших лайки
+
+Для того чтобы получить число пользователей, которые поставили какой-то сущности лайк можно воспользоваться запросом:
+
+```sql
+SELECT COUNT(*) FROM likes WHERE TYPE = "user" AND target_id = 3;
+```
+
+Для получения списка пользователей, которые поставили какой-то сущности лайк можно воспользоваться запросом:
+
+```sql
+SELECT
+    *
+FROM
+    likes
+WHERE
+    type = 'user' AND target_id = 3;
+```
+
+Для этих запросов можно указать любой тип из Likes.type.
+
+#### В будущем могут появиться новые виды сущностей, которые можно лайкать
+
+Для того чтобы добавить новые сущности достаточно просто создать таблицу с новой сущностью. В таблице Likes потребуется добавить новое поле, которое будет внешним ключом для новой сущности. Также потребуется создать новый тип - Likes.type. И можно добавить условие для новой сущности в триггер(чтобы 2 раза не создавалась запись при лайке).
