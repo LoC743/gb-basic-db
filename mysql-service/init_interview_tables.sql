@@ -1,6 +1,8 @@
+-- ---------------------------- Задание 1 ---------------------------------------- 
+-- Создание бд
 CREATE DATABASE interview;
 
-
+-- Создание таблицы пользователей
 CREATE TABLE `interview`.`_user` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `phone` VARCHAR(15) NOT NULL,
@@ -14,7 +16,7 @@ CREATE TABLE `interview`.`_user` (
     PRIMARY KEY (`id`)
 );
 
-
+-- Создание таблицы лайков
 CREATE TABLE `interview`.`likes` (
     `id` INT NOT NULL,
     `user_id` INT NOT NULL,
@@ -33,7 +35,7 @@ CREATE TABLE `interview`.`likes` (
         ON DELETE NO ACTION
         ON UPDATE NO ACTION);
 
-
+-- Создание таблицы взаимных лайков(совпадений)
 CREATE TABLE `interview`.`matches` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `first_user_id` INT NOT NULL,
@@ -52,8 +54,8 @@ CREATE TABLE `interview`.`matches` (
         ON DELETE NO ACTION
         ON UPDATE NO ACTION);
 
-
--- Для задания 3
+-- ---------------------------- Задание 3 ---------------------------------------- 
+-- Создание таблицы изображений
 CREATE TABLE `interview`.`photo` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `owner_id` INT NOT NULL,
@@ -66,6 +68,7 @@ CREATE TABLE `interview`.`photo` (
         ON DELETE NO ACTION
         ON UPDATE NO ACTION);
 
+-- Создание таблицы комментариев
 CREATE TABLE `interview`.`comments` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `target_id` INT NOT NULL,
@@ -85,7 +88,7 @@ CREATE TABLE `interview`.`comments` (
         ON DELETE NO ACTION
         ON UPDATE NO ACTION);
 
-
+-- Изменения таблицы Likes для изображений и комментариев
 ALTER TABLE `interview`.`likes` 
 DROP FOREIGN KEY `fk_target_id`;
 ALTER TABLE `interview`.`likes` 
@@ -111,6 +114,8 @@ ADD CONSTRAINT `fk_likes_comment_target_id`
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
 
+
+-- Триггер, чтоб не создавалось 2 записи под 1 лайк
 DROP TRIGGER IF EXISTS `interview`.`likes_BEFORE_INSERT`;
 
 DELIMITER $$
@@ -127,5 +132,19 @@ end if;
 END$$
 DELIMITER ;
 
-DELETE FROM likes WHERE user_id = 4 AND target_id = 5 AND type = "user";
 
+-- Для добавления в таблицы
+-- insert into _user (id, first_name, last_name) VALUES (1, "Jon", "Sandman");
+-- insert into _user (id, first_name, last_name) VALUES (2, "Sam", "Madman");
+-- insert into _user (id, first_name, last_name) VALUES (3, "Test", "Anykey");
+-- insert into _user (id, first_name, last_name) VALUES (4, "Brute", "Force");
+-- insert into _user (id, first_name, last_name) VALUES (5, "Ken", "Block");
+-- insert into _user (id, first_name, last_name) VALUES (6, "Box", "Kojima");
+
+-- insert into likes values (1, 1, 2);
+-- insert into likes (id, user_id, target_id, type) values (8, 4, 5, "user");
+-- DELETE FROM likes WHERE user_id = 4 AND target_id = 5 AND type = "user";
+-- insert into likes values (3, 4, 2);
+-- insert into likes values (4, 4, 3); 
+-- insert into likes values (5, 6, 2);
+-- insert into likes values (6, 6, 3);

@@ -2,6 +2,8 @@
 
 ## [Практическое задание](https://github.com/LoC743/gb-basic-db/blob/mysql-service/mysql-service/README.MD)
 
+### [SQL файл, для создания таблиц, котороые описаны дальше](https://github.com/LoC743/gb-basic-db/blob/mysql-service/mysql-service/init_interview_tables.sql)
+
 ## Задача 1.
 
 &nbsp;&nbsp;&nbsp;&nbsp;У вас есть социальная сеть, где пользователи (id, имя) могут ставить друг другу лайки. Создайте необходимые таблицы для хранения данной информации. Создайте запрос, который выведет информацию:
