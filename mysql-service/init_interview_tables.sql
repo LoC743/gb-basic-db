@@ -18,9 +18,9 @@ CREATE TABLE `interview`.`_user` (
 CREATE TABLE `interview`.`likes` (
     `id` INT NOT NULL,
     `user_id` INT NOT NULL,
-    `target_id` INT NULL,
+    `target_id` INT NOT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE INDEX `target_id_UNIQUE` (`target_id` ASC) VISIBLE,
+    INDEX `target_id_idx` (`target_id` ASC) VISIBLE,
     INDEX `fk_user_id_idx` (`user_id` ASC) VISIBLE,
     CONSTRAINT `fk_user_id`
         FOREIGN KEY (`user_id`)

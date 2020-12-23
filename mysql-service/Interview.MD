@@ -32,11 +32,11 @@
 
 #### Таблица Likes
 
-| Поле      | Тип данных | Дополнительные флаги                 | Описание                                            |
-| --------- | ---------- | ------------------------------------ | --------------------------------------------------- |
-| id        | INT        | Primary Key, Auto Increment          | Идентификатор лайка                                 |
-| user_id   | INT        | Foreign Key (User), Not Null         | Идентификатор пользователя, который поставил лайк   |
-| target_id | INT        | Foreign Key (User), Not Null, Unique | Идентификатор пользователя, которому поставили лайк |
+| Поле      | Тип данных | Дополнительные флаги         | Описание                                            |
+| --------- | ---------- | ---------------------------- | --------------------------------------------------- |
+| id        | INT        | Primary Key, Auto Increment  | Идентификатор лайка                                 |
+| user_id   | INT        | Foreign Key (User), Not Null | Идентификатор пользователя, который поставил лайк   |
+| target_id | INT        | Foreign Key (User), Not Null | Идентификатор пользователя, которому поставили лайк |
 
 #### Таблица Matches
 
@@ -96,7 +96,33 @@ FROM
 
 ### Решение
 
-<!-- Ответ на задачу 2 -->
+```sql
+SELECT DISTINCT
+    users_likes_ab.id
+FROM
+    (SELECT
+        user_likes_a.id
+    FROM
+        (SELECT
+        user_id AS id
+    FROM
+        likes
+    WHERE
+        likes.target_id = 2) AS user_likes_a
+    JOIN (SELECT
+        user_id AS id
+    FROM
+        likes
+    WHERE
+        likes.target_id = 3) AS user_likes_b ON user_likes_a.id = user_likes_b.id) AS users_likes_ab
+        JOIN
+    (SELECT
+        user_id AS id
+    FROM
+        likes
+    WHERE
+        target_id <> 5) AS user_not_likes_c ON users_likes_ab.id = user_not_likes_c.id
+```
 
 ## Задача 3
 
